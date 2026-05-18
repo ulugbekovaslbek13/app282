@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Crypto Messenger</title>
+    <style>
+        body { background: #0a0a0a; color: #00FF7F; font-family: 'Courier New', monospace; padding: 40px; display: flex; justify-content: center; }
+        .app { background: #111; border: 1px solid #00FF7F; padding: 30px; border-radius: 15px; width: 500px; box-shadow: 0 0 20px rgba(0,255,127,0.2); }
+        h2 { text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+        textarea { width: 100%; height: 100px; background: #000; color: #00FF7F; border: 1px solid #333; border-radius: 8px; padding: 10px; box-sizing: border-box; resize: none; outline: none; margin-bottom: 15px; }
+        .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { padding: 12px; border: 1px solid #00FF7F; background: transparent; color: #00FF7F; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #00FF7F; color: #000; }
+        .result-label { margin-top: 20px; font-size: 12px; color: #888; }
+        #output { color: #fff; word-wrap: break-word; background: #222; padding: 10px; border-radius: 5px; min-height: 40px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <h2>Secret Crypto</h2>
+    
+    <textarea id="inputText" placeholder="Xabarni shu yerga yozing..."></textarea>
+    
+    <div class="btns">
+        <button onclick="encrypt()">SHIFRLASH (Lock)</button>
+        <button onclick="decrypt()">OCHISH (Unlock)</button>
+    </div>
+
+    <div class="result-label">NATIJA:</div>
+    <div id="output">...</div>
+</div>
+
+<script>
+    // Shifrlash funksiyasi (Base64 + Simple Shift)
+    function encrypt() {
+        let str = document.getElementById('inputText').value;
+        if(!str) return alert("Matn yozing!");
+        
+        let encoded = btoa(unescape(encodeURIComponent(str))); // Base64 ga o'tkazish
+        document.getElementById('output').innerText = encoded;
+        document.getElementById('inputText').value = ""; // Inputni tozalash
+    }
+
+    // Shifrdan chiqarish funksiyasi
+    function decrypt() {
+        let str = document.getElementById('inputText').value;
+        if(!str) return alert("Shifrlangan kodni kiriting!");
+        
+        try {
+            let decoded = decodeURIComponent(escape(atob(str))); // Base64 dan qaytarish
+            document.getElementById('output').innerText = decoded;
+        } catch(e) {
+            alert("Xato: Bu shifrlangan xabar emas!");
+        }
+    }
+</script>
+
+</body>
+</html>
