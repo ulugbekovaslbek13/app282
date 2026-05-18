@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Password Vault | Aslbek</title>
+    <style>
+        body { background: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; display: flex; justify-content: center; padding: 40px; }
+        .vault-card { background: #1e293b; padding: 25px; border-radius: 12px; width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        h2 { color: #38bdf8; text-align: center; margin-bottom: 25px; }
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        input { background: #334155; border: 1px solid #475569; padding: 12px; border-radius: 6px; color: white; outline: none; }
+        input:focus { border-color: #38bdf8; }
+        button.add-btn { background: #38bdf8; color: #0f172a; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.add-btn:hover { background: #0ea5e9; transform: translateY(-2px); }
+        .password-list { margin-top: 25px; border-top: 1px solid #334155; padding-top: 15px; }
+        .item { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #38bdf8; }
+        .item span { font-size: 14px; }
+        .del-btn { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="vault-card">
+    <h2>Parollar Ombori</h2>
+    <div class="input-group">
+        <input type="text" id="siteName" placeholder="Sayt nomi (masalan: Instagram)">
+        <input type="password" id="sitePass" placeholder="Parol">
+        <button class="add-btn" onclick="savePassword()">Saqlash</button>
+    </div>
+
+    <div class="password-list" id="passList">
+        </div>
+</div>
+
+<script>
+    // Dastur yuklanganda saqlangan parollarni chiqarish
+    document.addEventListener('DOMContentLoaded', displayPasswords);
+
+    function savePassword() {
+        let site = document.getElementById('siteName').value;
+        let pass = document.getElementById('sitePass').value;
+
+        if (!site || !pass) return alert("Ma'lumotlarni to'liq kiriting!");
+
+        let passwords = JSON.parse(localStorage.getItem('myPasswords') || '[]');
+        passwords.push({ site, pass });
+        localStorage.setItem('myPasswords', JSON.stringify(passwords));
+
+        document.getElementById('siteName').value = '';
+        document.getElementById('sitePass').value = '';
+        displayPasswords();
+    }
+
+    function displayPasswords() {
+        let list = document.getElementById('passList');
+        let passwords = JSON.parse(localStorage.getItem('myPasswords') || '[]');
+        
+        list.innerHTML = passwords.map((item, index) => `
+            <div class="item">
+                <div>
+                    <strong style="color: #38bdf8">${item.site}</strong><br>
+                    <span>${item.pass}</span>
+                </div>
+                <button class="del-btn" onclick="deletePass(${index})">O'chirish</button>
+            </div>
+        `).join('');
+    }
+
+    function deletePass(index) {
+        let passwords = JSON.parse(localStorage.getItem('myPasswords'));
+        passwords.splice(index, 1);
+        localStorage.setItem('myPasswords', JSON.stringify(passwords));
+        displayPasswords();
+    }
+</script>
+
+</body>
+</html>
